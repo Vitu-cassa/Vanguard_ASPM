@@ -1,0 +1,5 @@
+[triage] batch_01.json: 8 triagens aplicadas (esperado 8).
+[triage] batch_02.json: 8 triagens aplicadas (esperado 8).
+[triage] batch_03.json: 3 triagens aplicadas (esperado 3).
+
+[triage] concluído: 19 achados atualizados.

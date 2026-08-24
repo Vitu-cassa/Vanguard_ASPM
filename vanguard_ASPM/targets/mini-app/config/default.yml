@@ -1,0 +1,11 @@
+app:
+  name: mini-app
+  port: 3000
+
+# CWE-798: chave de API embutida no arquivo de configuração
+external:
+  service_api_key: "sk_live_abc123DEF456ghi789JKL"
+  webhook_secret: "whsec_1a2b3c4d5e6f7g8h9i0j"
+
+database:
+  path: "./data.db"
