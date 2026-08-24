@@ -1,0 +1,14 @@
+{
+    [1m"total"[0m: [33m19[0m,
+    [1m"by_severity"[0m: {
+        [1m"HIGH"[0m: [33m10[0m,
+        [1m"MEDIUM"[0m: [33m9[0m,
+        [1m"LOW"[0m: [33m0[0m,
+        [1m"UNKNOWN"[0m: [33m0[0m
+    },
+    [1m"triados"[0m: [33m19[0m,
+    [1m"pct_triado"[0m: [33m100.0[0m,
+    [1m"lgpd"[0m: [33m11[0m,
+    [1m"security_score"[0m: [33m64[0m,
+    [1m"security_score_label"[0m: [32m"Aten\u00e7\u00e3o"[0m
+}

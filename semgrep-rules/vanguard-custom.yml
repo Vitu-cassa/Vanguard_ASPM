@@ -1,0 +1,156 @@
+# Regras custom Vanguard — complementam os rulesets p/javascript e p/nodejs.
+# Focadas nos padrões LGPD comuns que a Semgrep OSS não pega por default.
+rules:
+
+  - id: vanguard.md5-used-for-password
+    message: >-
+      MD5 é usado para hash de senha. Algoritmo fraco, quebrável em minutos
+      com hardware moderno. Substitua por bcrypt/argon2.
+    severity: ERROR
+    languages: [javascript]
+    pattern: crypto.createHash("md5")
+    metadata:
+      cwe: CWE-327
+      category: security
+      owasp: A02:2021 - Cryptographic Failures
+
+  - id: vanguard.sql-string-concat
+    message: >-
+      Query SQL montada por concatenação de string com input do usuário.
+      Vulnerável a SQL Injection. Use parâmetros vinculados.
+    severity: ERROR
+    languages: [javascript]
+    pattern-either:
+      - pattern: |
+          "..." + $X + "..."
+      - pattern: |
+          "SELECT " + $X
+      - pattern: |
+          "..." + $X
+    pattern-inside: |
+      $DB.$METHOD(...)
+    metadata:
+      cwe: CWE-89
+      category: security
+      owasp: A03:2021 - Injection
+
+  - id: vanguard.password-in-log
+    message: >-
+      Campo password (ou similar) escrito em log/console. Exposição de dado
+      pessoal sensível em runtime — violação direta da LGPD Art. 46.
+    severity: WARNING
+    languages: [javascript]
+    pattern-either:
+      - pattern: 'console.log(..., { ..., password: $X, ... }, ...)'
+      - pattern: 'console.log(..., $X, ..., password, ...)'
+      - pattern: 'console.log(..., "password", ..., $X)'
+    metadata:
+      cwe: CWE-532
+      category: security
+      owasp: A09:2021 - Security Logging and Monitoring Failures
+
+  - id: vanguard.sha1-in-security-context
+    message: >-
+      SHA1 usado em contexto de segurança (fingerprint/assinatura). Considerado
+      quebrado desde 2017. Use SHA-256 ou superior.
+    severity: WARNING
+    languages: [javascript]
+    pattern: crypto.createHash("sha1")
+    metadata:
+      cwe: CWE-330
+      category: security
+
+  - id: vanguard.math-random-for-token
+    message: >-
+      Math.random() não é criptograficamente seguro. Se usado para gerar IDs
+      de sessão, tokens ou nonces, permite predição.
+    severity: WARNING
+    languages: [javascript]
+    pattern: Math.random()
+    metadata:
+      cwe: CWE-338
+      category: security
+
+  - id: vanguard.child-process-exec-userinput
+    message: >-
+      child_process.exec com input do usuário. Vulnerável a command injection —
+      um payload como "; rm -rf /" executa comandos arbitrários no servidor.
+    severity: ERROR
+    languages: [javascript]
+    pattern: child_process.exec($X + $Y, ...)
+    metadata:
+      cwe: CWE-78
+      category: security
+      owasp: A03:2021 - Injection
+
+  - id: vanguard.eval-userinput
+    message: >-
+      eval() executa código arbitrário. Se receber input do usuário, é
+      remote code execution direto.
+    severity: ERROR
+    languages: [javascript]
+    pattern: eval($X)
+    metadata:
+      cwe: CWE-95
+      category: security
+      owasp: A03:2021 - Injection
+
+  - id: vanguard.new-function-userinput
+    message: >-
+      new Function() é equivalente a eval — compila código arbitrário em runtime.
+      Nunca use com input do usuário.
+    severity: ERROR
+    languages: [javascript]
+    pattern: new Function(...)
+    metadata:
+      cwe: CWE-94
+      category: security
+
+  - id: vanguard.xss-html-concat
+    message: >-
+      HTML montado com concatenação de string incluindo input do usuário.
+      Vulnerável a XSS refletido.
+    severity: WARNING
+    languages: [javascript]
+    pattern-either:
+      - pattern: '"<...>" + $X + "..."'
+      - pattern: '"..." + $X + "</...>"'
+    metadata:
+      cwe: CWE-79
+      category: security
+      owasp: A03:2021 - Injection
+
+  - id: vanguard.open-redirect
+    message: >-
+      res.redirect() recebe valor não validado da query string. Permite
+      redirecionamento para site malicioso (open redirect).
+    severity: WARNING
+    languages: [javascript]
+    pattern: res.redirect(req.query.$X)
+    metadata:
+      cwe: CWE-601
+      category: security
+
+  - id: vanguard.hardcoded-admin-token
+    message: >-
+      Token/segredo estático definido como constante no código-fonte.
+    severity: ERROR
+    languages: [javascript]
+    pattern-regex: |
+      const\s+(ADMIN_TOKEN|API_KEY|SECRET|TOKEN)\s*=\s*["'][A-Za-z0-9_\-]{8,}["']
+    metadata:
+      cwe: CWE-798
+      category: security
+
+  - id: vanguard.hardcoded-api-key-in-yaml
+    message: >-
+      Chave de API/secret hardcoded em arquivo de configuração versionado.
+      Rotacione a chave e mova para variável de ambiente.
+    severity: ERROR
+    languages: [yaml]
+    pattern-regex: |
+      (api_key|api_token|secret|apikey|service_api_key|webhook_secret)\s*:\s*["']?(sk_live_|whsec_|xoxp-|ghp_)[A-Za-z0-9_\-]+
+    metadata:
+      cwe: CWE-798
+      category: security
+      owasp: A07:2021 - Identification and Authentication Failures

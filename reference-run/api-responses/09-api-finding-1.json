@@ -1,0 +1,17 @@
+{
+    [1m"id"[0m: [33m1[0m,
+    [1m"scanner"[0m: [32m"semgrep"[0m,
+    [1m"rule_id"[0m: [32m"semgrep-rules.vanguard.md5-used-for-password"[0m,
+    [1m"severity"[0m: [32m"HIGH"[0m,
+    [1m"file_path"[0m: [32m"lib/crypto.js"[0m,
+    [1m"line"[0m: [33m6[0m,
+    [1m"message"[0m: [32m"MD5 \u00e9 usado para hash de senha. Algoritmo fraco, quebr\u00e1vel em minutos com hardware moderno. Substitua por bcrypt/argon2."[0m,
+    [1m"cwe"[0m: [32m"CWE-327"[0m,
+    [1m"lgpd_flag"[0m: [33m1[0m,
+    [1m"priority_score"[0m: [33m10.5[0m,
+    [1m"ai_status"[0m: [32m"triado"[0m,
+    [1m"ai_triage"[0m: [32m"verdadeiro_positivo_provavel"[0m,
+    [1m"ai_explanation"[0m: [32m"MD5 \u00e9 usado para hash de senha em lib/crypto.js:6. Hash r\u00e1pido, sem salt, quebra em minutos com GPU ou rainbow tables. Se o banco vazar, todas as senhas viram texto claro \u2014 falha grave sob LGPD Art. 46."[0m,
+    [1m"ai_fix"[0m: [32m"Troque por bcrypt.hash(pwd, 12) ou argon2id e migre as senhas existentes no pr\u00f3ximo login do usu\u00e1rio."[0m,
+    [1m"created_at"[0m: [32m"2026-08-24 05:39:52"[0m
+}

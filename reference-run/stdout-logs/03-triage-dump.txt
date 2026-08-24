@@ -1,0 +1,7 @@
+[triage] gravado /Users/raul.rocha/Downloads/vanguard-poc/prompts/batch_01.json  (ids=[1, 8, 15, 16, 18, 19, 3, 4])
+[triage] gravado /Users/raul.rocha/Downloads/vanguard-poc/prompts/batch_02.json  (ids=[6, 7, 10, 11, 12, 13, 14, 2])
+[triage] gravado /Users/raul.rocha/Downloads/vanguard-poc/prompts/batch_03.json  (ids=[5, 9, 17])
+
+[triage] 3 lote(s) escritos em /Users/raul.rocha/Downloads/vanguard-poc/prompts. Total de achados: 19.
+[triage] próximo passo: o modelo produz responses/batch_NN.json (array JSON puro, mesma ordem) e você roda:
+           python scripts/triage_claude.py --load-responses
