@@ -1,6 +1,0 @@
-[triage] reset: 19 achados marcados como 'pendente'.
-[triage] pendentes: 19 · modelo: gemini-3.6-flash
-[triage] lote 1/3: 8 achados → Gemini (gemini-3.6-flash)
-[triage] lote 2/3: 8 achados → Gemini (gemini-3.6-flash)
-[triage] lote 3/3: 3 achados → Gemini (gemini-3.6-flash)
-[triage] concluído: 19 achados triados por Gemini.

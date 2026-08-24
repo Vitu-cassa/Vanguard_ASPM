@@ -1,8 +1,0 @@
-[scan] rodando: semgrep --config auto --config semgrep-rules/vanguard-custom.yml --json --quiet targets/mini-app
-
-=== Vanguard - scan concluído ===
-Novos achados inseridos: 19
-Total por severidade   : {'HIGH': 10, 'MEDIUM': 9}
-Achados com flag LGPD  : 11
-Próximo passo: rodar `python scripts/triage.py` (com chave)
-           ou: rodar `python scripts/triage.py --fake` (sem chave)

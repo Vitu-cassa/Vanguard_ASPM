@@ -1,7 +1,0 @@
-total:|19
-sev HIGH|10
-sev MEDIUM|9
-triage falso_positivo_provavel|2
-triage revisar|5
-triage verdadeiro_positivo_provavel|12
-lgpd=1:|11
