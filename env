@@ -1,0 +1,14 @@
+# Copie este arquivo para `.env` e preencha com sua chave real.
+# NUNCA commite o `.env` — o `.gitignore` já bloqueia.
+#
+# Como obter uma chave Gemini gratuita:
+#   1. https://aistudio.google.com/apikey
+#   2. "Create API key" -> copie o valor
+#   3. Cole aqui em GEMINI_API_KEY (sem aspas)
+#
+# Modelos disponíveis (2026-08):
+#   - gemini-3.6-flash  (rápido, free tier — recomendado para triagem em lote)
+#   - gemini-3.6-pro    (mais lento, mais preciso, tier pago)
+#
+GEMINI_API_KEY=SUA_CHAVE_AQUI
+GEMINI_MODEL=gemini-3.6-flash
