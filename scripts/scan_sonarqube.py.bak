@@ -1,0 +1,105 @@
+"""
+Sensor SAST Extra: Executa o SonarScanner automaticamente ou consome relatórios.
+"""
+
+import argparse
+import json
+import os
+import subprocess
+import sys
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if ROOT not in sys.path:
+    sys.path.insert(0, ROOT)
+
+from app.db import get_conn, init_db
+from scripts.scan import LGPD_CWES, compute_priority
+
+SONAR_SEVERITY_MAP = {
+    "BLOCKER": "HIGH",
+    "CRITICAL": "HIGH",
+    "MAJOR": "MEDIUM",
+    "MINOR": "LOW",
+    "INFO": "LOW",
+}
+
+def run_sonar_scanner(target: str) -> dict:
+    """Executa o SonarScanner via Docker em modo de análise local no Codespaces."""
+    print(f"[scan_sonarqube] Rodando análise SonarScanner via Docker no alvo {target}...")
+    output_file = os.path.join(ROOT, "sonar-report.json")
+    
+    cmd = [
+        "docker", "run", "--rm",
+        "-v", f"{ROOT}:/usr/src",
+        "sonarsource/sonar-scanner-cli",
+        "-Dsonar.projectKey=mini-app",
+        "-Dsonar.sources=.",
+        f"-Dsonar.projectBaseDir=/usr/src/{target}",
+        "-Dsonar.report.export.path=/usr/src/sonar-report.json",
+        "-Dsonar.host.url=http://localhost:9000",  # Evita que tente redirecionar para o SonarCloud
+        "-Dsonar.scanner.dumpToFile=/usr/src/sonar-report.json"
+    ]
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True)
+        if os.path.exists(output_file):
+            with open(output_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            os.remove(output_file)
+            return data
+    except Exception as e:
+        print(f"[scan_sonarqube] Aviso no processamento Docker: {e}")
+    return {}
+    
+def insert_sonar_findings(issues: list) -> int:
+    init_db()
+    inserted = 0
+    with get_conn() as conn:
+        cur = conn.cursor()
+        for issue in issues:
+            severity = SONAR_SEVERITY_MAP.get(issue.get("severity", "MAJOR").upper(), "MEDIUM")
+            tags = issue.get("tags", [])
+            cwe = next((f"CWE-{t.split('-')[1]}" for t in tags if str(t).lower().startswith("cwe-")), None)
+            lgpd_flag = 1 if cwe in LGPD_CWES else 0
+            priority = compute_priority(severity, lgpd_flag)
+
+            cur.execute(
+                """
+                INSERT INTO findings
+                    (scanner, rule_id, severity, file_path, line, message, cwe, lgpd_flag, priority_score)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    "sonarqube",
+                    issue.get("rule", "sonar-rule"),
+                    severity,
+                    issue.get("component", "").split(":")[-1],
+                    issue.get("line", 1),
+                    issue.get("message", "").strip(),
+                    cwe,
+                    lgpd_flag,
+                    priority,
+                ),
+            )
+            inserted += 1
+        conn.commit()
+    return inserted
+
+def main():
+    parser = argparse.ArgumentParser(description="Vanguard - Sensor SonarQube SAST")
+    parser.add_argument("--target", default=os.path.join("targets", "mini-app"))
+    parser.add_argument("--report", default=None)
+    args = parser.parse_args()
+
+    data = {}
+    if args.report and os.path.exists(args.report):
+        with open(args.report, "r", encoding="utf-8") as f:
+            data = json.load(f)
+    else:
+        data = run_sonar_scanner(args.target)
+
+    issues = data.get("issues", []) if isinstance(data, dict) else data
+    total = insert_sonar_findings(issues)
+    print(f"[scan_sonarqube] Concluído. Achados inseridos: {total}")
+
+if __name__ == "__main__":
+    main()
