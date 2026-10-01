@@ -184,7 +184,7 @@ listando as URLs afetadas — senão um header ausente em 50 páginas viraria
 ### 3.4. Triagem por IA (Gemini)
 
 ```bash
-python scripts/triage_claude.py --online
+python scripts/triage_IA.py --online
 ```
 
 ```
@@ -200,18 +200,15 @@ pendente** e é retentado na próxima execução.
 
 **Se quiser re-triagar** (ex.: testar um modelo diferente):
 ```bash
-python scripts/triage_claude.py --online --reset --model gemini-3.6-pro
+python scripts/triage_IA.py --online --reset --model gemini-3.6-pro
 ```
 
 **Se você não tem chave** — modo offline manual funciona:
 ```bash
-python scripts/triage_claude.py --dump-prompts       # gera prompts/batch_NN.json
+python scripts/triage_IA.py --dump-prompts       # gera prompts/batch_NN.json
 # preencha responses/batch_NN.json à mão ou usando ChatGPT/Claude/qualquer LLM
-python scripts/triage_claude.py --load-responses
+python scripts/triage_IA.py --load-responses
 ```
-
-> `scripts/triage_IA.py` é uma cópia idêntica de `triage_claude.py`. Vale
-> manter só um dos dois.
 
 ### 3.5. Dashboard
 
@@ -298,7 +295,6 @@ Vanguard_ASPM/
 │
 ├── docs/
 │   ├── MUDANCAS-v0.2.md           ← bugs corrigidos e integrações desta versão
-│   └── RELATORIO-EXECUCAO-REAL.md ← relatório da execução original
 │
 ├── reports/                       ← (gerado) saída bruta de Sonar e ZAP — no .gitignore
 │
