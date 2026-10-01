@@ -1,0 +1,15 @@
+{
+  "name": "vanguard-mini-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Alvo PROPOSITALMENTE vulnerável do Vanguard ASPM. Não use em produção nem exponha na rede.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "sqlite3": "^5.1.7"
+  }
+}

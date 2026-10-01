@@ -1,0 +1,2 @@
+Manual do mini-app.
+Arquivo de exemplo servido por /download/manual.txt.

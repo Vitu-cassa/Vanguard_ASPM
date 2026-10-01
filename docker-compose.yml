@@ -1,0 +1,31 @@
+# Infra de apoio do Vanguard: SonarQube (SAST) + mini-app rodando (alvo do DAST).
+#
+#   docker compose up -d            # sobe os dois
+#   docker compose up -d sonarqube  # só o SonarQube
+#   docker compose down             # derruba (os dados do Sonar ficam nos volumes)
+#
+# As portas ficam presas em 127.0.0.1: nada disso deve ser acessível pela rede
+# — o mini-app é vulnerável de propósito.
+services:
+  sonarqube:
+    image: sonarqube:community
+    ports:
+      - "127.0.0.1:9000:9000"
+    environment:
+      # Dispensa o ajuste vm.max_map_count do Elasticsearch interno (ok para
+      # uso local/acadêmico; em servidor de verdade, configure o kernel).
+      SONAR_ES_BOOTSTRAP_CHECKS_DISABLE: "true"
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_logs:/opt/sonarqube/logs
+
+  mini-app:
+    build: ./targets/mini-app
+    ports:
+      - "127.0.0.1:3000:3000"
+
+volumes:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
