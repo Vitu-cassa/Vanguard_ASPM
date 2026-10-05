@@ -1,6 +1,6 @@
 # Vanguard ASPM MVP — Pacote de Replicação
 
-Kit completo pra rodar em **qualquer máquina** o pipeline:
+Kit completo pra rodar em localmente o pipeline:
 
 ```
  Semgrep (SAST) ─┐
@@ -387,6 +387,13 @@ O que **deve** ser reprodutível:
 - Os três scanners rodam e gravam sem duplicar em reexecuções.
 - Semgrep só com regras custom: exatamente 15 achados.
 - Dashboard responde 200 em todos os endpoints.
+
+---
+
+## Desenvolvido por:
+Victor Cassamassimo da Silva - 572852
+Pedro Bezerra Cardoso - 567119
+Nicolas Schultais Gouvea - 573863
 
 ---
 
