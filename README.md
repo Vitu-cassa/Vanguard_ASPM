@@ -391,9 +391,9 @@ O que **deve** ser reprodutível:
 ---
 
 ## Desenvolvido por:
-Victor Cassamassimo da Silva - 572852
-Pedro Bezerra Cardoso - 567119
-Nicolas Schultais Gouvea - 573863
+Victor Cassamassimo da Silva - 572852<br>
+Pedro Bezerra Cardoso - 567119<br>
+Nicolas Schultais Gouvea - 573863<br>
 
 ---
 
